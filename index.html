@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnonymooShak Downloads</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;800&display=swap');
+
+        :root {
+            --brand-blue: #1b6ec2; 
+            --brand-blue-light: #d8eded; 
+            --text-main: #202124;
+            --text-muted: #70757a; 
+            --border-color: #e0e0e0;
+            --bg-sidebar-active: #ebebeb;
+            --bg-body: #ffffff;
+            --details-bg: #f5f5f5; 
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            color: var(--text-main);
+            background-color: var(--bg-body);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ----- SIDEBAR ----- */
+        .sidebar {
+            width: 280px;
+            background: #ffffff;
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .brand-header {
+            height: 120px;
+            background-color: var(--brand-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .shark-logo {
+            font-size: 50px;
+            filter: brightness(0) invert(1); 
+        }
+
+        .search-box {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .search-box input {
+            width: 100%;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .menu-item {
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f1f3f4;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .menu-icon {
+            transition: transform 0.2s;
+            color: var(--text-muted);
+        }
+
+        .menu-icon.open { transform: rotate(180deg); }
+
+        .sub-menu {
+            background-color: #ffffff;
+            display: none; 
+        }
+
+        .sub-menu.show { display: block; }
+
+        .sub-item {
+            padding: 14px 16px 14px 32px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .sub-item .codename { color: var(--text-muted); font-weight: 400; }
+        .sub-item:hover { background-color: #f8f9fa; }
+
+        .sub-item.active {
+            background-color: var(--brand-blue);
+            color: #ffffff;
+        }
+
+        .sidebar-credits {
+            padding: 16px;
+            font-size: 12px;
+            color: #9aa0a6;
+            line-height: 1.4;
+        }
+
+        /* ----- MAIN CONTENT ----- */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .view { display: none; padding: 48px; }
+        .view.active { display: block; }
+
+        .top-header { padding: 24px 48px 0; }
+
+        .breadcrumbs {
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .chevron { color: var(--text-muted); }
+        .codename-header { color: var(--text-muted); font-size: 18px; }
+
+        .tabs {
+            display: flex;
+            gap: 32px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tab {
+            padding-bottom: 12px;
+            font-size: 13px;
+            font-weight: 500;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .tab.active { border-bottom: 3px solid var(--brand-blue); }
+
+        /* ----- BUILD LIST ----- */
+        h1 { font-size: 32px; font-weight: 500; margin-bottom: 32px; }
+        
+        .ee-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #000;
+        }
+
+        .build-card {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 8px 24px;
+        }
+
+        .file-row {
+            border-bottom: 1px solid #f1f3f4;
+        }
+        .file-row:last-child { border-bottom: none; }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+        }
+
+        /* Pill Download Button */
+        .btn-download {
+            width: 72px; 
+            height: 38px;
+            border-radius: 24px;
+            background-color: var(--brand-blue-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2c3e50; 
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        /* The "i" in a circle button */
+        .btn-info {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1.5px solid #8e9196; /* Clean grey circle */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #5f6368;
+            cursor: pointer;
+            margin-left: 12px;
+            font-family: inherit;
+            font-weight: 500;
+            font-size: 22px;
+            user-select: none;
+        }
+
+        .btn-info:hover {
+            background-color: #f1f3f4;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+        }
+
+        /* ----- DETAILS PANEL ----- */
+        .details-panel {
+            display: none;
+            background-color: var(--details-bg);
+            padding: 30px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .details-panel.show { display: block; }
+
+        .details-title {
+            font-weight: 500;
+            font-size: 18px;
+            margin-bottom: 24px;
+            color: #202124;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            row-gap: 16px;
+            font-size: 16px;
+        }
+
+        .label { color: #80868b; }
+        .value { color: #202124; word-break: break-all; }
+        
+        .compare-link {
+            color: #00796b; 
+            text-decoration: none;
+            font-weight: 500;
+            margin-top: 20px;
+            display: inline-block;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="brand-header" onclick="showView('home')">
+            <span class="shark-logo">&#x1F988;</span>
+        </div>
+
+        <div class="search-box">
+            <input type="text" placeholder="Search...">
+        </div>
+
+        <div class="device-list">
+            <div class="menu-item" onclick="toggleAccordion('samsung-menu', 'samsung-arrow')">
+                <span>Samsung</span> 
+                <span id="samsung-arrow" class="menu-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </span>
+            </div>
+            <div id="samsung-menu" class="sub-menu">
+                <div class="sub-item" id="starlte-tab" onclick="showView('builds')">
+                    <span>Galaxy S9</span>
+                    <span class="codename">starlte</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-credits">
+            Credits to LineageOS Team for download page style, I did code this download page with AI
+        </div>
+    </aside>
+
+    <main class="main-content">
+        
+        <section id="home-view" class="view active">
+            </section>
+
+        <section id="builds-view" class="view">
+            <header style="margin-bottom: 40px;">
+                <div class="breadcrumbs">
+                    <span>Samsung</span>
+                    <span class="chevron"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg></span>
+                    <span>Galaxy S9</span>
+                    <span class="codename-header">starlte</span>
+                </div>
+
+                <div class="tabs">
+                    <div class="tab" onclick="showView('home')">HOME</div>
+                    <div class="tab active">BUILDS</div>
+                </div>
+            </header>
+
+            <h1>Download builds</h1>
+            
+            <div class="ee-title">/e/OS</div>
+
+            <div class="build-card">
+                <div class="file-row">
+                    <div class="file-item">
+                        <span class="file-name">e-3.6-a16-20260303-UNOFFICIAL-starlte.zip</span>
+                        <div class="actions">
+                            <a href="https://github.com/jdkjkjj/anonymooshak-build/releases/download/eOS-starlte/e-3.6-a16-20260303-UNOFFICIAL-starlte.zip" download class="btn-download">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            </a>
+                            <div class="btn-info" onclick="toggleDetails('details-zip')">i</div>
+                        </div>
+                    </div>
+                    <div id="details-zip" class="details-panel">
+                        <div class="details-title">Details</div>
+                        <div class="details-grid">
+                            <div class="label">Date</div> <div class="value">2026-03-03</div>
+                            <div class="label">OS patch level</div> <div class="value">February 2026</div>
+                            <div class="label">Type</div> <div class="value">unofficial</div>
+                            <div class="label">Size</div> <div class="value">1.44 GB</div>
+                            <div class="label">SHA256</div> <div class="value">1a32a1c6cf01bf9af16447cb53b3c4eca87ecce4b8319331ca92f28e0629e0b5</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="file-row">
+                    <div class="file-item">
+                        <span class="file-name">recovery.img</span>
+                        <div class="actions">
+                            <a href="https://github.com/jdkjkjj/anonymooshak-build/releases/download/eOS-starlte/recovery.img" download class="btn-download">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            </a>
+                            <div class="btn-info" onclick="toggleDetails('details-recovery')">i</div>
+                        </div>
+                    </div>
+                    <div id="details-recovery" class="details-panel">
+                        <div class="details-title">Details</div>
+                        <div class="details-grid">
+                            <div class="label">Date</div> <div class="value">2026-03-03</div>
+                            <div class="label">OS patch level</div> <div class="value">February 2026</div>
+                            <div class="label">Type</div> <div class="value">unofficial</div>
+                            <div class="label">Size</div> <div class="value">45.6 MB</div>
+                            <div class="label">SHA256</div> <div class="value">5a78912f4efcdc2c9e0bfe644f82623c8dff93eae62b512290d8c21ba60b7e3e</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function toggleAccordion(menuId, arrowId) {
+            const menu = document.getElementById(menuId);
+            const arrow = document.getElementById(arrowId);
+            menu.classList.toggle('show');
+            arrow.classList.toggle('open');
+        }
+
+        function showView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId + '-view').classList.add('active');
+            const s9Tab = document.getElementById('starlte-tab');
+            if(viewId === 'builds') s9Tab.classList.add('active');
+            else s9Tab.classList.remove('active');
+        }
+
+        function toggleDetails(panelId) {
+            const panel = document.getElementById(panelId);
+            const isVisible = panel.classList.contains('show');
+            document.querySelectorAll('.details-panel').forEach(p => p.classList.remove('show'));
+            if (!isVisible) panel.classList.add('show');
+        }
+    </script>
+</body>
+</html>
